@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <main-menu />
     <v-main>
-      <PostList />
+      <news-scrap></news-scrap>
     </v-main>
 
     <v-footer app>
@@ -13,9 +13,9 @@
 
 <script>
 import MainMenu from "../components/MainMenu.vue";
-import PostList from "../components/PostList.vue";
+import NewsScrap from "../components/NewsScrap.vue";
 export default {
-  components: { PostList, MainMenu },
+  components: { NewsScrap, MainMenu },
   props: {
     //source: String,
   },

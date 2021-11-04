@@ -38,6 +38,8 @@ def prev_next_post(obj):
 
 
 def make_tag_cloud(qsTag):
+    if not qsTag:
+        return []
     minCount = min(tag.count for tag in qsTag)
     maxCount = max(tag.count for tag in qsTag)
 
@@ -71,3 +73,21 @@ def make_tag_cloud(qsTag):
         return tagList[:30]
     else:
         return tagList
+
+### NEWS API UTIL
+def obj_to_news(obj):
+    news = dict(vars(obj))
+
+    if obj.create_date:
+        news['create_date'] = obj.create_date.strftime('%Y-%m-%d %H:%M')
+    else:
+        news['create_date'] = ''
+
+    if obj.keywords:
+        news['keywords'] = [keyword.name for keyword in obj.keywords.all()]
+    else:
+        news['keywords'] = []
+
+    del news['_state']
+
+    return news

@@ -45,6 +45,27 @@ module.exports = {
       title: 'VueDjangoPhoto/post_scrap.html', 
       minify: false, 
     },
+    news_list: {
+      template: 'public/index.html', 
+      entry: 'src/pages/main_news_list.js', 
+      filename: 'news_list.html', 
+      title: 'VueDjangoPhoto/news_list.html', 
+      minify: false, 
+    },
+    news_detail:{
+      template: 'public/index.html', 
+      entry: 'src/pages/main_news_detail.js', 
+      filename: 'news_detail.html', 
+      title: 'VueDjangoPhoto/news_detail.html', 
+      minify: false, 
+    },
+    news_scrap: {
+      template: 'public/index.html', 
+      entry: 'src/pages/main_news_scrap.js', 
+      filename: 'news_scrap.html', 
+      title: 'VueDjangoPhoto/news_scrap.html', 
+      minify: false, 
+    },
   },
 
   
@@ -64,6 +85,7 @@ module.exports = {
             { source: 'dist/favicon.ico', destination: '../backend/static/img/' },
             { source: 'dist/home.html', destination: '../backend/templates/' },
             { source: 'dist/post*.html', destination: '../backend/templates/blog/' },
+            { source: 'dist/news*.html', destination: '../backend/templates/blog/' },
           ],
         }
       }),

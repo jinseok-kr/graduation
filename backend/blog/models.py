@@ -59,18 +59,18 @@ class News(models.Model):
     title = models.CharField(max_length=50)
     main_contents = models.TextField(default='')
     press = models.CharField(max_length=20)
-    create_date = models.CharField(max_length=20)
+    create_date = models.DateTimeField()
     keywords = TaggableManager(blank=True, through=NewsTag)
     scrap = models.ManyToManyField(get_user_model(), related_name='scrap_news', blank=True)
 
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse('blog:news_detail', args=(self.id,))
+    def get_absolute_url(self):
+        return reverse('blog:news_detail', args=(self.id,))
 
-    # def get_prev(self):
-    #     return self.get_previous_by_modify_dt()
-    #
-    # def get_next(self):
-    #     return self.get_next_by_modify_dt()
+    def get_prev(self):
+        return self.get_previous_by_create_date()
+
+    def get_next(self):
+        return self.get_next_by_create_date()

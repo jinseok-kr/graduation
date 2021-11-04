@@ -10,6 +10,7 @@ from multiprocessing import Process
 from exceptions import *
 from article_parser import ArticleParser
 from writer import Writer
+import sys
 import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.develop')
 import django
 django.setup()
 
-from blog.models import News, NewsTopics
+from blog.models import News
 
 class ArticleCrawler(object):
     def __init__(self):
@@ -96,7 +97,7 @@ class ArticleCrawler(object):
 
         self.set_date()
 
-        writer = Writer(category='Article', article_category=category_name, date=self.date)
+        #writer = Writer(category='Article', article_category=category_name, date=self.date)
 
         ###url_format = f'http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1={self.categories.get(category_name)}&date='
         url_format = f'https://news.naver.com/main/list.naver?mode=LSD&mid=shm&sid1={self.categories.get(category_name)}&date='
@@ -141,7 +142,7 @@ class ArticleCrawler(object):
 
                 try:
                     # ID 생성 (sid=분야ID, oid=신문사ID, aid=기사ID 조합)
-                    news_id = "'" + str(re.sub(r'[^0-9]', '', content_url)[1:]) # csv 저장시 1의자리 내림이 되어서 우선 '문자 넣어 놓음
+                    news_id = str(re.sub(r'[^0-9]', '', content_url)[1:]) # csv 저장시 1의자리 내림이 되어서 우선 '문자 넣어 놓음
                     print(news_id)
 
                     # 기사 제목 태그 추출
@@ -186,20 +187,24 @@ class ArticleCrawler(object):
 
                     # 기사 작성 시간 추출
                     time = re.findall('<span class="t11">(.*)</span>', request_content.text)[0]
+                    c_date = time.replace(u'오전', 'am').replace(u'오후', 'pm')
+                    print(c_date)
+                    dateFormatter = "%Y.%m.%d. %p %I:%M"
+                    c_date = datetime.datetime.strptime(c_date, dateFormatter)
+
 
                     #print(time)
 
                     # CSV 작성
-                    writer.write_row([news_id, time, category_name, text_press, text_title, text_content, content_url])
+                    #writer.write_row([news_id, c_date, category_name, text_press, text_title, text_content, content_url])
                     #News(news_id=news_id, category=category_name, url=content_url, title=text_title, main_contents=text_content, press=text_press, create_data=time).save()
                     News.objects.create(news_id=news_id, category=category_name, url=content_url, title=text_title,
-                                      main_contents=text_content, press=text_press, create_date=time)
+                                      main_contents=text_content, press=text_press, create_date=c_date)
 
 
                     del news_id, time
-                    #del text_headline, text_sentence, text_company
-                    #del tag_headline, tag_content, tag_company
-                    del tag_content
+                    del text_headline, text_sentence, text_company
+                    del tag_headline, tag_content, tag_company
                     del request_content, document_content
 
                 # UnicodeEncodeError
@@ -207,7 +212,7 @@ class ArticleCrawler(object):
                     del request_content, document_content
                     pass
                 print('{0}번째 크롤링 완료'.format(cnt))
-        writer.close()
+        #writer.close()
 
     def start(self):
         # MultiProcess 크롤링 시작
@@ -222,10 +227,6 @@ class ArticleCrawler(object):
         '''
 
 if __name__ == "__main__":
-    before_day = datetime.datetime.now() - datetime.timedelta(days=1)
-    NewsTopics.objects.filter(created_dt__lt=before_day).delete()
-
     Crawler = ArticleCrawler()
-    #정치 경제 사회 생활문화 세계 IT과학 오피니언
     Crawler.set_category('오피니언')
     Crawler.start()

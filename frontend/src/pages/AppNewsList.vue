@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <main-menu />
     <v-main>
-      <PostList />
+      <NewsList />
     </v-main>
 
     <v-footer app>
@@ -13,9 +13,9 @@
 
 <script>
 import MainMenu from "../components/MainMenu.vue";
-import PostList from "../components/PostList.vue";
+import NewsList from "../components/NewsList.vue";
 export default {
-  components: { PostList, MainMenu },
+  components: { NewsList, MainMenu },
   props: {
     //source: String,
   },

@@ -26,7 +26,8 @@
       <v-spacer></v-spacer>
 
       <v-btn text href="/">HOME</v-btn>
-      <v-btn text href="/blog/post/list/">Article</v-btn>
+      <v-btn text href="/blog/news/list/">Article</v-btn>
+      <v-btn text href="/blog/post/list/">POST</v-btn>
       <v-btn text href="/admin/">Admin</v-btn>
       <v-spacer></v-spacer>
 
@@ -57,7 +58,10 @@
               <v-list-item-title @click="dialogOpen('pwdchg')">Password change</v-list-item-title>
             </v-list-item>
             <v-list-item>
-              <v-list-item-title @click="moveScrap()">Scrap</v-list-item-title>
+              <v-list-item-title @click="moveNewsScrap()">Article Scrap</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title @click="movePostScrap()">Post Scrap</v-list-item-title>
             </v-list-item>
           </template>
         </v-list>
@@ -320,8 +324,12 @@ export default {
           alert(err.response.status + "" + err.response.statusText);
         });
     },
-    moveScrap(){
-      console.log("moveScrap()...");
+    moveNewsScrap(){
+      console.log("moveNewsScrap()...");
+      location.href = `/blog/news/scrap/`;
+    },
+    movePostScrap(){
+      console.log("movePostScrap()...");
       location.href = `/blog/post/scrap/`;
     },
   },

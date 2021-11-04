@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
-    <main-menu />
+    <main-menu/>
     <v-main>
-      <PostList />
+      <news-detail></news-detail>
     </v-main>
 
     <v-footer app>
@@ -12,16 +12,16 @@
 </template>
 
 <script>
-import MainMenu from "../components/MainMenu.vue";
-import PostList from "../components/PostList.vue";
+import MainMenu from '../components/MainMenu.vue';
+import NewsDetail from "../components/NewsDetail.vue";
 export default {
-  components: { PostList, MainMenu },
+  components: { NewsDetail, MainMenu },
   props: {
-    //source: String,
+    source: String,
   },
 
   data: () => ({
-    //drawer: null,
+    drawer: null,
   }),
 
   created: () => {
