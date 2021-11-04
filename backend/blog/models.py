@@ -41,3 +41,35 @@ class Post(models.Model):
     def get_next(self):
         return self.get_next_by_modify_dt()
 
+
+class NewsTopics(TagBase):
+    created_dt = models.DateTimeField('Creation date', auto_now_add=True, editable=False)
+
+
+class NewsTag(ItemBase):
+    content_object = models.ForeignKey('News', on_delete=models.CASCADE)
+    tag = models.ForeignKey(NewsTopics, related_name="topic_items", on_delete=models.CASCADE)
+    created_dt = models.DateTimeField('Creation date', auto_now_add=True, editable=False)
+
+
+class News(models.Model):
+    news_id = models.CharField(max_length=50) # 네이버뉴스 기준 sid(정치,경제,문화 등), oid(언론사구분), aid(기사 구분)의 조합으로 id생성
+    category = models.CharField(max_length=20)
+    url = models.URLField()
+    title = models.CharField(max_length=50)
+    main_contents = models.TextField(default='')
+    press = models.CharField(max_length=20)
+    create_date = models.CharField(max_length=20)
+    keywords = TaggableManager(blank=True, through=NewsTag)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog:news_detail', args=(self.id,))
+
+    # def get_prev(self):
+    #     return self.get_previous_by_modify_dt()
+    #
+    # def get_next(self):
+    #     return self.get_next_by_modify_dt()
