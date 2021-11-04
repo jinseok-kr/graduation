@@ -224,6 +224,8 @@ class ArticleCrawler(object):
 if __name__ == "__main__":
     before_day = datetime.datetime.now() - datetime.timedelta(days=1)
     NewsTopics.objects.filter(created_dt__lt=before_day).delete()
+
     Crawler = ArticleCrawler()
+    #정치 경제 사회 생활문화 세계 IT과학 오피니언
     Crawler.set_category('오피니언')
     Crawler.start()
