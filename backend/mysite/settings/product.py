@@ -5,7 +5,7 @@ from .base import *
 
 #SECRET_KEY = os.environ['SECRET_KEY']
 
-STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = []
 DEBUG = False
 
