@@ -16,7 +16,7 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.develop')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.product')
 
 import django
 django.setup()

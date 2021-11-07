@@ -4,14 +4,14 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'mysite.settings.develop')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'mysite.settings.product')
 # 이제 장고를 가져와 장고 프로젝트를 사용할 수 있도록 환경을 만듭니다.
 import django
 django.setup()
 
-from blog.models import Topics
+from blog.models import News, Topics
 import datetime
 
-before_day=datetime.datetime.now()-datetime.timedelta(days=1)
-
-Topics.objects.filter(created_dt__lt=before_day).delete()
+#before_day=datetime.datetime.now()-datetime.timedelta(days=1)
+News.objects.all().delete()
+#Topics.objects.filter(created_dt__lt=before_day).delete()
