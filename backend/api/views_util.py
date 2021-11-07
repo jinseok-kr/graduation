@@ -50,8 +50,6 @@ def make_tag_cloud(qsTag):
         else:
             factor = (maxweight - minweight) / (maxCount - minCount)
 
-        factor = (maxweight - minweight) / (maxCount - minCount)
-
         def func(count):
             weight = (minweight + (factor * (count - minCount)))
             return weight
