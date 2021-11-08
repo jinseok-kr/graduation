@@ -3,8 +3,8 @@
     <v-data-table
       :headers="headers"
       :items="newss"
-      sort-by.sync="create_date"
-      sort-desc.sync="isDesc"
+      sort-by="create_date"
+      sort-desc="true"
       class="elevation-1"
       :items-per-page="5"
       @click:row="serverPage"
@@ -51,7 +51,6 @@ export default {
     newss: [],
     keyname: "",
     me: {user:'Anonymous'},
-    isDesc: true,
   }),
   created() {
     const params = new URL(location).searchParams;

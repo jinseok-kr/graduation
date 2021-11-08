@@ -3,8 +3,8 @@
     <v-data-table
       :headers="headers"
       :items="posts"
-      sort-by.sync="modify_dt"
-      sort-desc.sync="isDesc"
+      sort-by="modify_dt"
+      sort-desc="true"
       class="elevation-1"
       :items-per-page="5"
       @click:row="serverPage"
@@ -95,7 +95,6 @@ export default {
     defaultItem: {},
     actionKind: '',
     me: {user:'Anonymous'},
-    isDesc: true,
   }),
   computed: {
     formTitle() {
