@@ -3,7 +3,8 @@
     <v-data-table
       :headers="headers"
       :items="newss"
-      sort-by="name"
+      sort-by.sync="create_date"
+      sort-desc.sync="true"
       class="elevation-1"
       :items-per-page="5"
       @click:row="serverPage"
