@@ -9,9 +9,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'mysite.settings.product')
 import django
 django.setup()
 
-from blog.models import News, Topics
+from blog.models import News, NewsTopics, NewsTag
 import datetime
 
 #before_day=datetime.datetime.now()-datetime.timedelta(days=1)
+NewsTopics.objects.all().delete()
 News.objects.all().delete()
+NewsTag.objects.all().delete()
 #Topics.objects.filter(created_dt__lt=before_day).delete()

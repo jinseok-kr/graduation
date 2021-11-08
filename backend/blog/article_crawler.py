@@ -165,13 +165,13 @@ class ArticleCrawler(object):
                     text_content = ''
                     text_content = text_content + str(tag_content)
                     withoutTag_content = ''
-                    withoutTag = text_content + ArticleParser.clear_content(str(tag_content.find_all(text=True)))
+                    withoutTag_content = withoutTag_content + ArticleParser.clear_content(str(tag_content.find_all(text=True)))
 
                     # 공백일 경우 기사 제외 처리
-                    if not text_content:
+                    if not withoutTag_content:
                         continue
 
-                    keywords = key_extraction.extraction(withoutTag)
+                    keywords = key_extraction.extraction(withoutTag_content)
 
 
                     # 기사 언론사 태그 추출
