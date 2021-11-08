@@ -76,12 +76,6 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: [
-      {
-        text: "ID",
-        align: "start",
-        sortable: false,
-        value: "id",
-      },
       { text: "제 목", value: "title" },
       { text: "요 약", value: "description" },
       { text: "수정일", value: "modify_dt" },

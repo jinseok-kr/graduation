@@ -14,8 +14,9 @@
       >
         <v-data-table
         :headers="headers"
-        :items="posts"
-        sort-by="name"
+        :items="newss"
+        sort-by="create_date"
+        sort-desc="true"
         class="elevation-1"
         :items-per-page="10"
         :hide-default-footer="true"
@@ -25,8 +26,8 @@
           <v-toolbar flat>
             <v-toolbar-title
               >주요 뉴스
-              <span v-if="tagname" class="body-1 font-italic ml-3"
-                >(with {{ tagname }} tagged)</span
+              <span v-if="keyname" class="body-1 font-italic ml-3"
+                >(with {{ keyname }} tagged)</span
               >
             </v-toolbar-title>
           </v-toolbar>
@@ -43,84 +44,77 @@ import axios from "axios";
     name: 'HelloWorld',
 
     data: () => ({
-      posts: [],
-      tagwords: [],
-      tagname: "",
+      newss: [],
+      keywords: [],
+      keyname: "",
       headers: [
-        {
-          text: "ID",
-          align: "start",
-          sortable: false,
-          value: "id",
-        },
         { text: "제 목", value: "title" },
-        { text: "요 약", value: "description" },
-        { text: "수정일", value: "modify_dt" },
-        { text: "작성자", value: "owner" },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "분 야", value: "category" },
+        { text: "작성일", value: "create_date" },
+        { text: "언론사", value: "press" },
       ],
     }),
     created() {
-      this.fetchTags();
+      this.fetchKeywords();
     },
     methods: {
-      fetchPostList() {
-        console.log("fetchPostList()...", this.tagwords);
+      fetchNewsList() {
+        console.log("fetchNewsList()...", this.keywords);
 
-        const max = this.tagwords.reduce(function(prev, current) {
+        const max = this.keywords.reduce(function(prev, current) {
           return (prev.count > current.count) ? prev : current
         })
-        console.log("find max count...", this.tagname);
-        this.tagname = max.name;
+        console.log("find max count...", this.keyname);
+        this.keyname = max.name;
 
         let getUrl = "";
-        if (this.tagname) getUrl = `/api/post/list/?tagname=${this.tagname}`;
-        else getUrl = "/api/post/list";
+        if (this.keyname) getUrl = `/api/news/list/?keyname=${this.keyname}`;
+        else getUrl = "/api/news/list";
 
         axios
         .get(getUrl)
         .then((res) => {
-          console.log("POST LIST GET RES!!", res);
-          this.posts = res.data;
+          console.log("NEWS LIST GET RES!!", res);
+          this.newss = res.data;
         })
         .catch((err) => {
-          console.log("POST LIST ERR RES!!", err.response);
+          console.log("NEWS LIST ERR RES!!", err.response);
           alert(err.response.status + "" + err.response.statusText);
         });
       },
       serverPage(item) {
         console.log("serverPage()...", item);
-        location.href = `/blog/post/${item.id}`;
+        location.href = `/blog/news/${item.id}`;
       },
 
       
 
-      fetchTags() {
-        console.log("fetchTags()..");
-        axios.get('/api/tag/cloud/')
+      fetchKeywords() {
+        console.log("fetchKeywords()..");
+        axios.get('/api/keyword/cloud/')
         .then(res => {
-          console.log("POST CLOUD GET RES", res);
-          this.tagwords = res.data;
+          console.log("NEWS CLOUD GET RES", res);
+          this.keywords = res.data;
           //tag.weight
           //배열의 각 원소에 조작하려면 forEach 매서드를 사용할 수 있다.
-          this.fetchPostList();
-          this.genTagcloud();
+          this.fetchNewsList();
+          this.genKeycloud();
         })
         .catch(err => {
-          console.log("TAG CLOUD GET ERR.RESPONSE", err.response);
+          console.log("KEY CLOUD GET ERR.RESPONSE", err.response);
           alert(err.response.status+ ''+ err.response.statusText);
         });
       },
-      genTagcloud() {
-        console.log("genTagcloud()..", this.tagwords);
+      genKeycloud() {
+        console.log("genKeycloud()..", this.keywords);
         const cloud = require('d3-cloud');
         cloud()
-          .words(this.tagwords)
+          .words(this.keywords)
           .padding(5)
           .font('Impact')
           .rotate(0)
           .text((d) => d.name)
-          .fontSize(function(d) {return 10 + d.count * 10;})
+          .fontSize(function(d) {return 10 + d.count;})
           .on('end', this.end)
           .spiral('archimedean')
           .start()
@@ -143,7 +137,7 @@ import axios from "axios";
           .enter()
           .append('text')
           .style('font-size', (d) => {
-            return 10 + d.count * 10 + "px";
+            return 10 + d.count + "px";
           })
           .style('font-family', 'Impact')
           .style('opacity', 0.8)
@@ -153,12 +147,12 @@ import axios from "axios";
           })
           .text((d) => d.name)        
           .on("click", function() {
-              const tagname11 = d3.select(this).text();
-              serverPagewithTag(tagname11);
+              const sltKey = d3.select(this).text();
+              serverPagewithTag(sltKey);
             })
-          function serverPagewithTag(tagname) {
-            console.log("serverPagewithTag()...", tagname);
-            location.href = `/blog/post/list/?tagname=${tagname}`;
+          function serverPagewithTag(keyname) {
+            console.log("serverPagewithTag()...", keyname);
+            location.href = `/blog/news/list/?keyname=${keyname}`;
           }
       },
       

@@ -1,35 +1,32 @@
 import os
 import sys
 import platform
+import calendar
 import requests
 import re
 import time
+import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 from multiprocessing import Process
 from exceptions import *
 from article_parser import ArticleParser
 from writer import Writer
-import sys
-import datetime
+from keyword_extraction import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.product')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.develop')
 
 import django
 django.setup()
 
 from blog.models import News
 
+
 class ArticleCrawler(object):
     def __init__(self):
-        '''
-        self.categories = {'정치': 100, '경제': 101, '사회': 102, '생활문화': 103, '세계': 104, 'IT과학': 105, '오피니언': 110,
-                           'politics': 100, 'economy': 101, 'society': 102, 'living_culture': 103, 'world': 104,
-                           'IT_science': 105, 'opinion': 110}
-        '''
         self.categories = {'정치': 100, '경제': 101, '사회': 102, '생활문화': 103, '세계': 104, 'IT과학': 105, '오피니언': 110}
         self.selected_categories = []
         self.date = {'year': 0, 'month': 0, 'day': 0}
@@ -106,6 +103,8 @@ class ArticleCrawler(object):
         print(category_name + " Urls are generated")
         print("The crawler starts")
 
+        key_extraction = KeyExtraction()
+
         cnt = 0
         for url in target_urls:
             request = self.get_url_data(url)
@@ -164,21 +163,22 @@ class ArticleCrawler(object):
 
                     # 뉴스 기사 본문 초기화
                     text_content = ''
-                    #text_content = text_content + ArticleParser.clear_content(str(tag_content[0].find_all(text=True)))
                     text_content = text_content + str(tag_content)
-                    #print(text_sentence)
+                    withoutTag_content = ''
+                    withoutTag = text_content + ArticleParser.clear_content(str(tag_content.find_all(text=True)))
 
                     # 공백일 경우 기사 제외 처리
                     if not text_content:
                         continue
+
+                    keywords = key_extraction.extraction(withoutTag)
+
 
                     # 기사 언론사 태그 추출
                     tag_press = document_content.find_all('meta', {'property': 'me2:category1'})
 
                     text_press = ''
                     text_press = text_press + str(tag_press[0].get('content'))
-
-                    #print(text_press)
 
                     # 공백일 경우 기사 제외 처리
                     if not text_press:
@@ -188,24 +188,22 @@ class ArticleCrawler(object):
                     # 기사 작성 시간 추출
                     time = re.findall('<span class="t11">(.*)</span>', request_content.text)[0]
                     c_date = time.replace(u'오전', 'am').replace(u'오후', 'pm')
-                    print(c_date)
                     dateFormatter = "%Y.%m.%d. %p %I:%M"
                     c_date = datetime.datetime.strptime(c_date, dateFormatter)
 
-
-                    #print(time)
-
                     # CSV 작성
-                    #writer.write_row([news_id, c_date, category_name, text_press, text_title, text_content, content_url])
+                    #writer.write_row([news_id, c_date, category_name, text_press, text_title, text_content, content_url, keywords])
                     #News(news_id=news_id, category=category_name, url=content_url, title=text_title, main_contents=text_content, press=text_press, create_data=time).save()
                     news, flag = News.objects.get_or_create(news_id=news_id, category=category_name, url=content_url, title=text_title,
-                                      main_contents=text_content, press=text_press, create_date=c_date)
+                                     main_contents=text_content, press=text_press, create_date=c_date)
+
+                    for key in keywords:
+                        news.keywords.add(key)
 
                     if not flag:
                         news.delete()
 
-
-                    del news_id, time
+                    del news_id, time, c_date
                     del text_headline, text_sentence, text_company
                     del tag_headline, tag_content, tag_company
                     del request_content, document_content

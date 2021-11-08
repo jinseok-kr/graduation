@@ -36,12 +36,6 @@ import EventBus from './event_bus';
 export default {
   data: () => ({
     headers: [
-      {
-        text: "ID",
-        align: "start",
-        sortable: false,
-        value: "id",
-      },
       { text: "제 목", value: "title" },
       { text: "분 야", value: "category" },
       { text: "작성일", value: "create_date" },
