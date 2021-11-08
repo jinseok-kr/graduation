@@ -198,8 +198,11 @@ class ArticleCrawler(object):
                     # CSV 작성
                     #writer.write_row([news_id, c_date, category_name, text_press, text_title, text_content, content_url])
                     #News(news_id=news_id, category=category_name, url=content_url, title=text_title, main_contents=text_content, press=text_press, create_data=time).save()
-                    News.objects.create(news_id=news_id, category=category_name, url=content_url, title=text_title,
+                    news, flag = News.objects.get_or_create(news_id=news_id, category=category_name, url=content_url, title=text_title,
                                       main_contents=text_content, press=text_press, create_date=c_date)
+
+                    if not flag:
+                        news.delete()
 
 
                     del news_id, time
