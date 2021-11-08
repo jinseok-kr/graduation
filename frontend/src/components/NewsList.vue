@@ -4,7 +4,7 @@
       :headers="headers"
       :items="newss"
       sort-by.sync="create_date"
-      sort-desc.sync="true"
+      sort-desc.sync="isDesc"
       class="elevation-1"
       :items-per-page="5"
       @click:row="serverPage"
@@ -51,6 +51,7 @@ export default {
     newss: [],
     keyname: "",
     me: {user:'Anonymous'},
+    isDesc: true,
   }),
   created() {
     const params = new URL(location).searchParams;

@@ -4,7 +4,7 @@
       :headers="headers"
       :items="posts"
       sort-by.sync="modify_dt"
-      sort-desc.sync="true"
+      sort-desc.sync="isDesc"
       class="elevation-1"
       :items-per-page="5"
       @click:row="serverPage"
@@ -95,6 +95,7 @@ export default {
     defaultItem: {},
     actionKind: '',
     me: {user:'Anonymous'},
+    isDesc: true,
   }),
   computed: {
     formTitle() {
