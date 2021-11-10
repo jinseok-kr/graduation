@@ -114,7 +114,7 @@ import axios from "axios";
           .font('Impact')
           .rotate(0)
           .text((d) => d.name)
-          .fontSize(function(d) {return 10 + d.count;})
+          .fontSize(function(d) {return 10 + d.count * 10;})
           .on('end', this.end)
           .spiral('archimedean')
           .start()
@@ -137,7 +137,7 @@ import axios from "axios";
           .enter()
           .append('text')
           .style('font-size', (d) => {
-            return 10 + d.count + "px";
+            return 10 + d.count * 10 + "px";
           })
           .style('font-family', 'Impact')
           .style('opacity', 0.8)

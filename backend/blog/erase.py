@@ -12,8 +12,15 @@ django.setup()
 from blog.models import News, NewsTopics, NewsTag
 import datetime
 
-#before_day=datetime.datetime.now()-datetime.timedelta(days=1)
-NewsTopics.objects.all().delete()
-News.objects.all().delete()
-NewsTag.objects.all().delete()
-#Topics.objects.filter(created_dt__lt=before_day).delete()
+def erase_all():
+    NewsTopics.objects.all().delete()
+    News.objects.all().delete()
+    NewsTag.objects.all().delete()
+
+def erase_oneday():
+    before_day = datetime.datetime.now()-datetime.timedelta(minutes=5)
+    NewsTopics.objects.filter(created_dt__lt=before_day).delete()
+    NewsTag.objects.filter(created_dt__lt=before_day).delete()
+
+if __name__ == "__main__":
+    erase_all()

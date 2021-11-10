@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from multiprocessing import Process
 from exceptions import *
 from article_parser import ArticleParser
+import erase
 from writer import Writer
 from keyword_extraction import *
 
@@ -197,11 +198,10 @@ class ArticleCrawler(object):
                     news, flag = News.objects.get_or_create(news_id=news_id, category=category_name, url=content_url, title=text_title,
                                      main_contents=text_content, press=text_press, create_date=c_date)
 
-                    for key in keywords:
-                        news.keywords.add(key)
+                    if flag:
+                        for key in keywords:
+                            news.keywords.add(key)
 
-                    if not flag:
-                        news.delete()
 
                     del news_id, time, c_date
                     del text_headline, text_sentence, text_company
@@ -228,6 +228,7 @@ class ArticleCrawler(object):
         '''
 
 if __name__ == "__main__":
+    erase.erase_oneday()
     Crawler = ArticleCrawler()
-    Crawler.set_category('오피니언')
+    Crawler.set_category('정치')
     Crawler.start()
