@@ -66,7 +66,7 @@ def make_tag_cloud(qsTag):
             'count': tag.count,
             'weight': weight,
         })
-
+    tagList.sort(key=lambda x: x['count'], reverse=True)
     if len(tagList) > 30:
         return tagList[:30]
     else:
