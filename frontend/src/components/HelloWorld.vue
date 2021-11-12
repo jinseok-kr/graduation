@@ -108,9 +108,9 @@ import axios from "axios";
       genKeycloud() {
         console.log("genKeycloud()..", this.keywords);
         const d3 = require('d3');
-        wordScale = d3.scale.linear().domain([0, 500]).range([0, 50]).clamp(true);
-        //const cloud = require('d3-cloud');
-        d3.layout.cloud()
+        let wordScale = d3.scaleLinear().domain([0, 500]).range([0, 50]).clamp(true);
+        const cloud = require('d3-cloud');
+        cloud()
           .words(this.keywords)
           .padding(5)
           .font('Impact')
