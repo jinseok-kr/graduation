@@ -107,14 +107,16 @@ import axios from "axios";
       },
       genKeycloud() {
         console.log("genKeycloud()..", this.keywords);
-        const cloud = require('d3-cloud');
-        cloud()
+        const d3 = require('d3');
+        wordScale = d3.scale.linear().domain([0, 500]).range([0, 50]).clamp(true);
+        //const cloud = require('d3-cloud');
+        d3.layout.cloud()
           .words(this.keywords)
           .padding(5)
           .font('Impact')
           .rotate(0)
           .text((d) => d.name)
-          .fontSize(function(d) {return d.count/3;})
+          .fontSize(function(d) {return wordScale(d.count);})
           .on('end', this.end)
           .spiral('archimedean')
           .start()
@@ -137,7 +139,7 @@ import axios from "axios";
           .enter()
           .append('text')
           .style('font-size', (d) => {
-            return d.count/3 + "px";
+            return d.size + "px";
           })
           .style('font-family', 'Impact')
           .style('opacity', 0.8)
